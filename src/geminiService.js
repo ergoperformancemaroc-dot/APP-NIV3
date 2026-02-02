@@ -1,6 +1,5 @@
 const API_KEY = 'AIzaSyBuZreXaZOBk03KG9OBrAt_UrAHwfwV-WM';
 
-// Base de données VIN pour extraire marque/modèle
 const VIN_DATABASE = {
   'BMW': ['BA', 'BF'],
   'Mercedes': ['WDB', 'WBK'],
@@ -122,18 +121,15 @@ SI VIN NON LISIBLE:
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     let result = jsonMatch ? JSON.parse(jsonMatch[0]) : { error: 'Impossible de lire l\'image' };
     
-    // Nettoie le VIN
     if (result.vin) {
       result.vin = result.vin.toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0, 17);
     }
     
-    // Valide la longueur
     if (result.vin && result.vin.length !== 17) {
       result.error = `VIN invalide: ${result.vin.length} caractères`;
       result.readable = false;
     }
     
-    // Détecte la marque depuis le VIN si pas trouvée
     if (result.vin && !result.make) {
       result.make = detectMakeFromVIN(result.vin) || '';
     }
@@ -178,11 +174,9 @@ Si rien n'est visible, réponds: UNKNOWN`
   }
 };
 
-// Détecte le modèle basé sur le VIN (selon les positions WMI)
 export const getVehicleModelFromVIN = async (vin) => {
   const make = detectMakeFromVIN(vin);
   
-  // Pour une meilleure détection, utilise Gemini
   try {
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`, {
       method: 'POST',
@@ -194,7 +188,7 @@ export const getVehicleModelFromVIN = async (vin) => {
 
 Déduis le modèle probable du véhicule et l'année.
 
-Respond UNIQUEMENT en JSON:
+Responds UNIQUEMENT en JSON:
 {"model": "X5", "year": "2020"}`
           }]
         }]
