@@ -116,26 +116,41 @@ const App = () => {
   };
 
   const exportToCSV = () => {
-    if (history.length === 0) return;
-    const headers = ["NIV", "Marque", "Modele", "Annee", "Emplacement", "Remarques", "Date", "Heure", "Entreprise"];
+    if (history.length === 0) {
+      alert('Aucun véhicule à exporter');
+      return;
+    }
+
+    const headers = ["NIV", "Marque", "Modèle", "Emplacement", "Remarques", "Date", "Heure"];
     const rows = history.map(item => [
       item.vin,
-      item.make,
-      item.model,
-      item.year,
+      item.make || "",
+      item.model || "",
       item.location,
       item.remarks || "",
       item.fullDate,
-      item.timestamp,
-      settings.companyName
+      item.timestamp
     ]);
-    const csvContent = [headers, ...rows].map(e => e.join(";")).join("\n");
+
+    const csvContent = [
+      headers.join(";"),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(";"))
+    ].join("\n");
+
     const blob = new Blob(["\ufeff" + csvContent], { type: 'text/csv;charset=utf-8;' });
+    
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", `stock_${settings.companyName.replace(/\s/g, '_')}_${new Date().toISOString().split('T')[0]}.csv`);
+    
+    const filename = `VIN_Scan_${settings.companyName.replace(/\s/g, '_')}_${new Date().toISOString().split('T')[0]}.csv`;
+    link.setAttribute("download", filename);
+    
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
+    
+    vibrate('success');
   };
 
   const handleImageUpload = async (event, type) => {
@@ -149,31 +164,33 @@ const App = () => {
       try {
         if (type === 'vin') {
           const result = await extractVehicleData(base64String);
+          
           if (result.error) {
             setError(result.error);
             vibrate('error');
           } else {
             const detectedVin = (result.vin || '').replace(/[^A-Z0-9]/g, '').toUpperCase();
+            
             if (detectedVin.length !== 17) {
-              setError(`NIV détecté incomplet (${detectedVin.length}/17). Veuillez réessayer avec une meilleure image.`);
+              setError(`NIV détecté incomplet (${detectedVin.length}/17). Veuillez réessayer.`);
               vibrate('warning');
             } else if (history.some(item => item.vin === detectedVin)) {
-              setError("⚠️ ATTENTION : Ce véhicule est déjà en stock.");
+              setError("⚠️ Ce véhicule est déjà en stock.");
               vibrate('error');
             } else {
               vibrate('success');
               setVehicleData({
                 vin: detectedVin,
-                make: result.make || '',
-                model: result.model || '',
-                year: result.year || '',
+                make: result.make || 'À identifier',
+                model: result.model || 'À identifier',
+                year: result.year || 'À identifier',
                 remarks: ''
               });
               setError(null);
             }
           }
         } else {
-          const locResult = await extractLocationData(base64Image);
+          const locResult = await extractLocationData(base64String);
           if (locResult) {
             vibrate('success');
             setActiveLocation(locResult.toUpperCase().substring(0, 15));
@@ -181,7 +198,7 @@ const App = () => {
           }
         }
       } catch (err) {
-        setError("Erreur de connexion IA. Vérifiez votre clé API.");
+        setError("Erreur de connexion IA.");
       } finally {
         setLoading(false);
         if (event.target) event.target.value = '';
@@ -461,8 +478,10 @@ const App = () => {
                 <span className="text-2xl">📦</span>Historique ({history.length})
               </h2>
               <div className="flex gap-2">
-                <button onClick={clearHistory} className="text-xs bg-red-600/30 hover:bg-red-600/50 px-3 py-1 rounded border border-red-600/50 font-bold transition-all">🗑️</button>
-                <button onClick={exportToCSV} className="text-xs bg-green-600/30 hover:bg-green-600/50 px-3 py-1 rounded border border-green-600/50 font-bold transition-all">📊</button>
+                <button onClick={clearHistory} className="text-xs bg-red-600/30 hover:bg-red-600/50 px-3 py-2 rounded border border-red-600/50 font-bold transition-all">🗑️</button>
+                <button onClick={exportToCSV} className="text-xs bg-green-600/30 hover:bg-green-600/50 px-3 py-2 rounded border border-green-600/50 font-bold transition-all" title="Exporter en CSV">
+                  ⬇️ CSV ({history.length})
+                </button>
               </div>
             </div>
 
