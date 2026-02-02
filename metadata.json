@@ -1,0 +1,7 @@
+{
+  "name": "VIN Scan Pro 0.1",
+  "description": "Une application professionnelle pour scanner les numéros de châssis (NIV/VIN), extraire les détails du véhicule et gérer les emplacements de stockage.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
