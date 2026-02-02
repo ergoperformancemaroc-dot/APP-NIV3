@@ -4,6 +4,7 @@
   "framework": null,
   "installCommand": "echo 'Nothing to install'",
   "buildCommand": "echo 'Static deploy'",
+  "outputDirectory": ".",
   "headers": [
     {
       "source": "/manifest.json",
