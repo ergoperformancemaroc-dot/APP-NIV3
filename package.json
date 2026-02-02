@@ -1,20 +1,24 @@
-
 {
   "name": "vin-scan-pro",
   "version": "0.5.0",
   "private": true,
   "description": "Application professionnelle de scan de NIV/VIN par IA",
   "scripts": {
-    "start": "serve .",
-    "build": "echo 'No build step required for ESM-based app'"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
-  "keywords": [
-    "vin",
-    "scanner",
-    "automotive",
-    "gemini",
-    "ai"
-  ],
+  "keywords": ["vin", "scanner", "automotive", "gemini", "ai"],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@google/genai": "^1.39.0"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
 }
