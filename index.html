@@ -1,48 +1,9 @@
-<!DOCTYPE html>
-<html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#1a365d" />
-    <meta name="description" content="VIN Scan Pro - Application professionnelle de scan de NIV/VIN par IA" />
-    <link rel="manifest" href="./manifest.json" />
-    <title>VIN Scan Pro</title>
-    <style>
-      :root {
-        --sat: env(safe-area-inset-top);
-        --sab: env(safe-area-inset-bottom);
-      }
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
 
-      body {
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        margin: 0;
-        padding: 0;
-        background-color: #f8fafc;
-        overscroll-behavior-y: contain;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      }
-
-      #root {
-        height: 100%;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: var(--sab);
-      }
-
-      #root::-webkit-scrollbar {
-        display: none;
-      }
-
-      input, select {
-        font-size: 16px !important;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/index.tsx"></script>
-  </body>
-</html>
+const rootElement = document.getElementById('root');
+if (rootElement) {
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(<App />);
+}
