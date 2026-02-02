@@ -1,7 +1,5 @@
 {
   "version": 2,
-  "cleanUrls": true,
-  "installCommand": "echo 'Nothing to install'",
-  "buildCommand": "echo 'No build required'",
-  "outputDirectory": "."
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist"
 }
