@@ -1,21 +1,18 @@
-
 {
   "version": 2,
   "cleanUrls": true,
   "framework": null,
   "installCommand": "echo 'Nothing to install'",
   "buildCommand": "echo 'Static deploy'",
-  "routes": [
+  "headers": [
     {
-      "src": "/manifest.json",
-      "dest": "/manifest.json",
-      "headers": {
-        "cache-control": "public, max-age=0, must-revalidate"
-      }
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
+      "source": "/manifest.json",
+      "headers": [
+        {
+          "key": "cache-control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
     }
   ]
 }
